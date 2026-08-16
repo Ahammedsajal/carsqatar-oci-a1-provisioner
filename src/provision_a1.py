@@ -84,6 +84,11 @@ def capacity_error(error: ServiceError) -> bool:
     )
 
 
+def unavailable_domain_error(error: ServiceError) -> bool:
+    """Treat an OCI per-domain 404 as skippable, not as a credential failure."""
+    return getattr(error, "status", None) == 404 and getattr(error, "code", "") == "NotAuthorizedOrNotFound"
+
+
 def existing_instance(compute_client: object, settings: Settings) -> bool:
     """Return true for any non-terminated instance with our display name."""
     response = compute_client.list_instances(
@@ -146,6 +151,9 @@ def provision(settings: Settings, compute_client: object, identity_client: objec
         except ServiceError as error:
             if capacity_error(error):
                 LOG.warning("A1 capacity unavailable in %s; continuing", domain)
+                continue
+            if unavailable_domain_error(error):
+                LOG.warning("OCI did not expose launch resources for %s; continuing", domain)
                 continue
             LOG.error(
                 "OCI rejected the request in %s: status=%s code=%s message=%s",
