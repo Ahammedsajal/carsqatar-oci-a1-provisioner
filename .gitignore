@@ -1,0 +1,6 @@
+.env
+*.pem
+*.key
+*.key.pub
+__pycache__/
+.pytest_cache/
