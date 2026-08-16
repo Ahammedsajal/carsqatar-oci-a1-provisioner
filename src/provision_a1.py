@@ -51,7 +51,7 @@ class Settings:
             or required("OCI_TENANCY_ID"),
             fingerprint=required("OCI_FINGERPRINT"),
             private_key=required("OCI_PRIVATE_KEY"),
-            region=os.getenv("OCI_REGION", "uk-london-1").strip(),
+            region=os.getenv("OCI_REGION", "").strip() or "uk-london-1",
             subnet_id=required("OCI_SUBNET_ID"),
             image_id=required("OCI_IMAGE_ID"),
             public_ssh_key=required("OCI_PUBLIC_SSH_KEY"),
