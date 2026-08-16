@@ -165,7 +165,7 @@ def provision(settings: Settings, compute_client: object, identity_client: objec
             return 1
 
     LOG.info("No A1 capacity was available in any domain; try again next schedule.")
-    return 2
+    return 0
 
 
 def main() -> int:
