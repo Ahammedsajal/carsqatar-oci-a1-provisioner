@@ -147,7 +147,13 @@ def provision(settings: Settings, compute_client: object, identity_client: objec
             if capacity_error(error):
                 LOG.warning("A1 capacity unavailable in %s; continuing", domain)
                 continue
-            LOG.error("OCI rejected the request in %s: %s", domain, error.message)
+            LOG.error(
+                "OCI rejected the request in %s: status=%s code=%s message=%s",
+                domain,
+                getattr(error, "status", "unknown"),
+                getattr(error, "code", "unknown"),
+                getattr(error, "message", str(error)),
+            )
             return 1
 
     LOG.info("No A1 capacity was available in any domain; try again next schedule.")
